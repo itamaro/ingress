@@ -33,6 +33,13 @@ const (
 	// Not all cloud providers support this annotation, though AWS & GCE do.
 	AnnotationLoadBalancerSourceRangesKey = "service.beta.kubernetes.io/load-balancer-source-ranges"
 
+	// AnnotationServiceTimeout is the key of the annotation on a service to set request timeout on LoadBalancers that support it
+	//
+	// It should be an unsigned integer value, specified in seconds.
+	// A value of "0" indicates to use the default value of the underlying LoadBalancer,
+	// and is equivalent to not specifying the annotation at all.
+	AnnotationServiceTimeout = "service.beta.kubernetes.io/timeout"
+
 	// AnnotationValueExternalTrafficLocal Value of annotation to specify local endpoints behaviour
 	AnnotationValueExternalTrafficLocal = "OnlyLocal"
 	// AnnotationValueExternalTrafficGlobal Value of annotation to specify global (legacy) behaviour

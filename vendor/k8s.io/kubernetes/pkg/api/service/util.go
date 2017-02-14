@@ -18,6 +18,7 @@ package service
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"k8s.io/kubernetes/pkg/api"
@@ -65,4 +66,19 @@ func GetLoadBalancerSourceRanges(service *api.Service) (netsets.IPNet, error) {
 		}
 	}
 	return ipnets, nil
+}
+
+// GetServiceRequestTimeout parse and verify the AnnotationServiceTimeout annotation from a service,
+// extracting the request timeout. if not present - returns 0.
+func GetServiceRequestTimeout(service *api.Service) (uint64, error) {
+	val := service.Annotations[AnnotationServiceTimeout]
+	val = strings.TrimSpace(val)
+	if val == "" {
+		return 0, nil
+	}
+	timeout, err := strconv.ParseUint(val, 10, 32)
+	if err != nil {
+		return 0, fmt.Errorf("%s: %s is not valid. Expecting unsigned integer (seconds).", AnnotationServiceTimeout, val)
+	}
+	return timeout, nil
 }

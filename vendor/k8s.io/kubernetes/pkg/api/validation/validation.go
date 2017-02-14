@@ -2555,6 +2555,15 @@ func validateServiceFields(service *api.Service) field.ErrorList {
 			allErrs = append(allErrs, field.Invalid(fieldPath, val, "must be a list of IP ranges. For example, 10.240.0.0/24,10.250.0.0/24 "))
 		}
 	}
+
+	// Validate timeout annotation
+	_, err := apiservice.GetServiceRequestTimeout(service)
+	if err != nil {
+		fieldPath = field.NewPath("metadata", "annotations").Key(apiservice.AnnotationServiceTimeout)
+		val = service.Annotations[apiservice.AnnotationServiceTimeout]
+		allErrs = append(allErrs, field.Invalid(fieldPath, val, "must be an unsigned integer (seconds)."))
+	}
+
 	return allErrs
 }
 
